@@ -1,44 +1,33 @@
 import mongoose from "mongoose";
 
-const renterSchema = new mongoose.Schema({
-  renterFirstName: {
-    type: "String",
-    required: true,
-    trim: true,
-  },
-  renterLastName: {
-    type: "String",
-    required: true,
-    trim: true,
-  },
-  renterUserName: {
-    type: String,
-    required: [true, "Username is required"],
-    unique: true,
-    trim: true,
-    minlength: [3, "Username must be at least 3 characters"],
-    maxlength: [20, "Username cannot exceed 20 characters"],
-    match: [/^[a-zA-Z0-9]+$/, "Username can only contain letters and numbers"],
-  },
-  email: {
-    type: "String",
-    required: true,
-    trim: true,
-    unique: true,
-  },
-  password: {
-    type: "String",
-    required: true,
-    trim: true,
-    minlength: [6, "Password must be at least 6 characters"],
-  },
-  phoneNumber: {
-    type: "String",
-    required: true,
-    trim: true,
-    match: [/^\d{11}$/, "Phone number must be 11 digits"],
-  },
-  montoring:[]
-});
+const renterSchema = new mongoose.Schema(
+  {
+    
+    googleId: { type: String, required: true, unique: true }, 
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      lowercase: true,
+    },
+    firstName: { type: String, required: true, trim: true },
+    lastName: { type: String, trim: true, default: "" },
+    avatar: { type: String, default: "" },
+    phoneNumber: {
+      type: String,
+      trim: true,
+      match: [/^\d{11}$/, "Phone number must be 11 digits"],
+    },
 
-const Renter = mongoose.model("Renter", renterSchema);
+    profileCompleted: { type: Boolean, default: false },
+
+    refreshToken: { type: String, select: false },
+
+    monitoring: [{ type: mongoose.Schema.Types.ObjectId, ref: "Property" }],
+    premiumSubscribed: { type: Boolean, default: false },
+  },
+  { timestamps: true },
+);
+
+export const Renter = mongoose.model("Renter", renterSchema);
